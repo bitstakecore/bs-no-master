@@ -1,0 +1,15 @@
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.0.html
+
+[Desktop Entry]
+Type=Application
+Version=3.0.0
+Encoding=UTF-8
+Name=BS Qt (resync)
+Icon=${SNAP}/BS128.png
+MimeType=x-scheme-handler/BS;
+Exec=BS %u --resync
+Terminal=false
+Categories=Office;Finance;Cryptocurrency;
+Comment=🗺️BS Digital Currency QT (resync main net) 👯👯 👛 (by 🐼CEVAP🐼) CE source code (Community Edition)
+Keywords=internet;BS;main;qt;crypto;currency;snap;snapcraft;resync;
+Name[de_DE]=BS-resync.desktop.desktop

@@ -1,0 +1,16 @@
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.0.html
+
+[Desktop Entry]
+Type=Application
+Version=3.0.0
+Encoding=UTF-8
+Name=BS Qt Testnet (reindex)
+Icon=${SNAP}/BS128testnet.png
+MimeType=x-scheme-handler/BS;
+Exec=BS %u --testnet --reindex
+Terminal=false
+Categories=Office;Finance;Cryptocurrency;
+Comment=🗺️BS Digital Currency QT (Testnet) (reindex) 👯👯 👛 (by 🐼CEVAP🐼) CE source code (Community Edition)
+Keywords=internet;BS;testnet;qt;crypto;currency;snap;snapcraft;reindex;
+Name[de_DE]=BS-testnet-reindex.desktop.desktop
+

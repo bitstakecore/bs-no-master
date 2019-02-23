@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=BS-Qt
+Comment=BS P2P gaming related cryptocurrency
+Comment[fr]=BS, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=BS, eşten eşe kriptografik sanal para birimi
+Exec=BS-qt %u
+Terminal=false
+Type=Application
+Icon=BS128
+MimeType=x-scheme-handler/BS;
+Categories=Office;Finance;

@@ -1,0 +1,26 @@
+# /etc/conf.d/BSd: config file for /etc/init.d/BSd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/BS/Bitstakecoin.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/BSd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/BSd.pid"
+
+# Where to write BSd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/BSd"
+
+# User and group to own BSd process
+#BITCOIND_USER="BS"
+#BITCOIND_GROUP="BS"
+
+# Path to BSd executable
+#BITCOIND_BIN="/usr/bin/BSd"
+
+# Nice value to run BSd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOIND_OPTS=""
