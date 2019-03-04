@@ -5,8 +5,6 @@
 #ifndef BS_ACCUMULATORMAP_H
 #define BS_ACCUMULATORMAP_H
 
-#include "libzerocoin/Accumulator.h"
-#include "libzerocoin/Coin.h"
 
 //A map with an accumulator for each denomination
 class AccumulatorMap

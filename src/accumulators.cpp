@@ -11,7 +11,6 @@
 #include "init.h"
 #include "spork.h"
 
-using namespace libzerocoin;
 
 std::map<uint32_t, CBigNum> mapAccumulatorValues;
 std::list<uint256> listAccCheckpointsNoDB;
