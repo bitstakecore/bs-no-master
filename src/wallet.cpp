@@ -26,7 +26,6 @@
 #include "utilmoneystr.h"
 
 #include "denomination_functions.h"
-#include "libzerocoin/Denominations.h"
 #include <assert.h>
 
 #include <boost/algorithm/string/replace.hpp>

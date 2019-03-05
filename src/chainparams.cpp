@@ -6,7 +6,6 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "libzerocoin/Params.h"
 #include "chainparams.h"
 #include "random.h"
 #include "util.h"
@@ -82,14 +81,6 @@ static const Checkpoints::CCheckpointData dataRegtest = {
     0,
     100};
 
-libzerocoin::ZerocoinParams* CChainParams::Zerocoin_Params() const
-{
-    assert(this);
-    static CBigNum bnTrustedModulus(zerocoinModulus);
-    static libzerocoin::ZerocoinParams ZCParams = libzerocoin::ZerocoinParams(bnTrustedModulus);
-
-    return &ZCParams;
-}
 
 class CMainParams : public CChainParams
 {
@@ -131,10 +122,7 @@ public:
         nMidasStartTime = 1837631395;                 // Time when MIDAS started and old algorithm stopped
         nDGWStartHeight = 55550000;                     // Startheight of DGW
         nDGWStartTime = 1837631395;              // GMT: Saturday, March 24, 2018 12:27:45 AM - Exact time when DGW algorithm starts and old MIDAS stops
-        nZerocoinStartHeight = 55550000;                // Zerocoin start height, starts together with DGW
-        nZerocoinStartTime = 1837631395;             // GMT: Saturday, March 24, 2018 12:27:45 AM, 
         nBlockEnforceSerialRange = 550137;            // Enforce serial range starting this block
-        nBlockRecalculateAccumulators = 550137;       // Trigger a recalculation of accumulators
         nBlockFirstFraudulent = 99999999;             // 1110; //First block that bad serials emerged (currently we do not have any) *** TODO ***
         nBlockLastGoodCheckpoint = 55550137;            // Last valid accumulator checkpoint (currently we do not have any) *** TODO ***
         nBlockEnforceInvalidUTXO = 55550137;            // Start enforcing the invalid UTXO's's
@@ -203,19 +191,6 @@ for(int ii=100000;ii<1000000;ii++) {
         strObfuscationPoolDummyAddress = "BitstakecoinDarksendPoo1DummyAdy4viSr";
         nStartMasternodePayments = 1558696182; // GMT: Thursday, 15. February 2018 12:03:02
 
-        /** Zerocoin */
-        zerocoinModulus = "25195908475617893494027183240048398571429282126204032027777137836043662020707595556264018525880784"
-            "4069182906412495150821892955591491761845028084891200728449926873928072877767359714183472702618963750149718246911"
-            "6507761337985909570009733035974880842840179742910064245869181719511874612151517265463228221686998754918242243363"
-            "7259085141865462043576798443387184774447920739934236584823824281198163815010674810451660377306056201619676256133"
-            "8441436038339044149526344351901146575444541784240209246165157233507787077498171257724679629263863563732899121548"
-            "31438167899885040445364023627381951378636564391212010397122822120720357";
-        nMaxZerocoinSpendsPerTransaction = 7; // Assume about 20kb each
-        nMinZerocoinMintFee = 1 * CENT; //high fee required for zerocoin mints
-        nMintRequiredConfirmations = 20; //the maximum amount of confirmations until accumulated in 19
-        nRequiredAccumulation = 1;
-        nDefaultSecurityLevel = 100; //full security level for accumulators
-        nZerocoinHeaderVersion = 8; //Block headers must be this version once zerocoin is active
         nBudget_Fee_Confirmations = 6; // Number of confirmations for the finalization fee
     }
 
@@ -255,12 +230,7 @@ public:
         nLastPOWBlock = 300;
         nMidasStartHeight = 75000;
         nMidasStartTime = 1497209344;
-        nZerocoinStartHeight = 331100;              // Zerocoin start height
-        nZerocoinStartTime = 1521414629;            // GMT: Sunday, March 18, 2018 11:10:29 PM
-        nDGWStartHeight = nZerocoinStartHeight;
-        nDGWStartTime = nZerocoinStartTime;
         nBlockEnforceSerialRange = 10000000;        // Enforce serial range starting this block
-        nBlockRecalculateAccumulators = 10000000;   // Trigger a recalculation of accumulators
         nBlockFirstFraudulent = 99999999;           // 1110; //First block that bad serials emerged (currently we do not have any) *** TODO ***
         nBlockLastGoodCheckpoint = 10000000;        // Last valid accumulator checkpoint (currently we do not have any) *** TODO ***
         nBlockEnforceInvalidUTXO = 10000000;        // Start enforcing the invalid UTXO's
@@ -314,19 +284,6 @@ public:
         strObfuscationPoolDummyAddress = "TMPUBzcsHZawA32XYYDF9FHQp6icv492CV";
         nStartMasternodePayments = 1558696182; // GMT: Thursday, 15. February 2018 12:03:03
 
-        /** Zerocoin */
-        zerocoinModulus = "25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784"
-            "4069182906412495150821892985591491761845028084891200728449926873928072877767359714183472702618963750149718246911"
-            "6507761337985909570009733045974880842840179742910064245869181719511874612151517265463228221686998754918242243363"
-            "7259085141865462043576798423387184774447920739934236584823824281198163815010674810451660377306056201619676256133"
-            "8441436038339044149526344321901146575444541784240209246165157233507787077498171257724679629263863563732899121548"
-            "31438167899885040445364023527381951378636564391212010397122822120720357";
-        nMaxZerocoinSpendsPerTransaction = 7; // Assume about 20kb each
-        nMinZerocoinMintFee = 1 * CENT; //high fee required for zerocoin mints
-        nMintRequiredConfirmations = 20; //the maximum amount of confirmations until accumulated in 19
-        nRequiredAccumulation = 1;
-        nDefaultSecurityLevel = 100; //full security level for accumulators
-        nZerocoinHeaderVersion = 8; //Block headers must be this version once zerocoin is active
         nBudget_Fee_Confirmations = 3; // Number of confirmations for the finalization fee. We have to make this very short
                                        // here because we only have a 8 block finalization window on testnet
     }

@@ -298,7 +298,6 @@ static const CRPCCommand vRPCCommands[] =
         {"network", "clearbanned", &clearbanned, true, false, false},
 
         /* Block chain and UTXO */
-        {"blockchain", "findserial", &findserial, true, false, false},
         {"blockchain", "getblockchaininfo", &getblockchaininfo, true, false, false},
         {"blockchain", "getbestblockhash", &getbestblockhash, true, false, false},
         {"blockchain", "getblockcount", &getblockcount, true, false, false},
@@ -443,8 +442,7 @@ static const CRPCCommand vRPCCommands[] =
         {"zerocoin", "getarchivedzerocoin", &getarchivedzerocoin, false, false, true},
         {"zerocoin", "importzerocoins", &importzerocoins, false, false, true},
         {"zerocoin", "exportzerocoins", &exportzerocoins, false, false, true},
-        {"zerocoin", "reconsiderzerocoins", &reconsiderzerocoins, false, false, true},
-        {"zerocoin", "getspentzerocoinamount", &getspentzerocoinamount, false, false, false}
+        {"zerocoin", "reconsiderzerocoins", &reconsiderzerocoins, false, false, true}
 
 #endif // ENABLE_WALLET
 };

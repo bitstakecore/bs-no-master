@@ -10,7 +10,6 @@
 
 #include "leveldbwrapper.h"
 #include "main.h"
-#include "primitives/zerocoin.h"
 
 #include <map>
 #include <string>
@@ -70,25 +69,5 @@ public:
     bool LoadBlockIndexGuts();
 };
 
-class CZerocoinDB : public CLevelDBWrapper
-{
-public:
-    CZerocoinDB(size_t nCacheSize, bool fMemory = false, bool fWipe = false);
-
-private:
-    CZerocoinDB(const CZerocoinDB&);
-    void operator=(const CZerocoinDB&);
-
-public:
-    bool WriteCoinMint(const libzerocoin::PublicCoin& pubCoin, const uint256& txHash);
-    bool ReadCoinMint(const CBigNum& bnPubcoin, uint256& txHash);
-    bool WriteCoinSpend(const CBigNum& bnSerial, const uint256& txHash);
-    bool ReadCoinSpend(const CBigNum& bnSerial, uint256& txHash);
-    bool EraseCoinMint(const CBigNum& bnPubcoin);
-    bool EraseCoinSpend(const CBigNum& bnSerial);
-    bool WriteAccumulatorValue(const uint32_t& nChecksum, const CBigNum& bnValue);
-    bool ReadAccumulatorValue(const uint32_t& nChecksum, CBigNum& bnValue);
-    bool EraseAccumulatorValue(const uint32_t& nChecksum);
-};
 
 #endif // BITCOIN_TXDB_H

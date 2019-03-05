@@ -19,7 +19,6 @@
 #include "main.h"
 #include "primitives/block.h"
 #include "primitives/transaction.h"
-#include "primitives/zerocoin.h"
 #include "ui_interface.h"
 #include "util.h"
 #include "validationinterface.h"
@@ -41,7 +40,6 @@
 extern CFeeRate payTxFee;
 extern CAmount maxTxFee;
 extern unsigned int nTxConfirmTarget;
-extern bool bSpendZeroConfChange;
 extern bool bdisableSystemnotifications;
 extern bool fSendFreeTransactions;
 extern bool fPayAtLeastCustomFee;
@@ -87,25 +85,6 @@ enum AvailableCoinsType {
     STAKABLE_COINS = 6                          // UTXO's that are valid for staking
 };
 
-// Possible states for xBS send
-enum ZerocoinSpendStatus {
-    XION_SPEND_OKAY = 0,                            // No error
-    XION_SPEND_ERROR = 1,                           // Unspecified class of errors, more details are (hopefully) in the returning text
-    XION_WALLET_LOCKED = 2,                         // Wallet was locked
-    XION_COMMIT_FAILED = 3,                         // Commit failed, reset status
-    XION_ERASE_SPENDS_FAILED = 4,                   // Erasing spends during reset failed
-    XION_ERASE_NEW_MINTS_FAILED = 5,                // Erasing new mints during reset failed
-    XION_TRX_FUNDS_PROBLEMS = 6,                    // Everything related to available funds
-    XION_TRX_CREATE = 7,                            // Everything related to create the transaction
-    XION_TRX_CHANGE = 8,                            // Everything related to transaction change
-    XION_TXMINT_GENERAL = 9,                        // General errors in MintToTxIn
-    XION_INVALID_COIN = 10,                         // Selected mint coin is not valid
-    XION_FAILED_ACCUMULATOR_INITIALIZATION = 11,    // Failed to initialize witness
-    XION_INVALID_WITNESS = 12,                      // Spend coin transaction did not verify
-    XION_BAD_SERIALIZATION = 13,                    // Transaction verification failed
-    XION_SPENT_USED_XION = 14,                      // Coin has already been spend
-    XION_TX_TOO_LARGE = 15                          // The transaction is larger than the max tx size
-};
 
 struct CompactTallyItem {
     CBitcoinAddress address;
@@ -201,17 +180,6 @@ public:
     bool SelectCoinsCollateral(std::vector<CTxIn>& setCoinsRet, CAmount& nValueRet) const;
 
     // Zerocoin additions
-    bool CreateZerocoinMintTransaction(const CAmount nValue, CMutableTransaction& txNew, vector<CZerocoinMint>& vMints, CReserveKey* reservekey, int64_t& nFeeRet, std::string& strFailReason, const CCoinControl* coinControl = NULL, const bool isZCSpendChange = false);
-    bool CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel, CWalletTx& wtxNew, CReserveKey& reserveKey, CZerocoinSpendReceipt& receipt, vector<CZerocoinMint>& vSelectedMints, vector<CZerocoinMint>& vNewMints, bool fMintChange,  bool fMinimizeChange, CBitcoinAddress* address = NULL);
-    bool MintToTxIn(CZerocoinMint zerocoinSelected, int nSecurityLevel, const uint256& hashTxOut, CTxIn& newTxIn, CZerocoinSpendReceipt& receipt);
-    std::string MintZerocoinFromOutPoint(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoinMint>& vMints, const vector<COutPoint> vOutpts);
-    std::string MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoinMint>& vMints, const CCoinControl* coinControl = NULL);
-    bool SpendZerocoin(CAmount nValue, int nSecurityLevel, CWalletTx& wtxNew, CZerocoinSpendReceipt& receipt, vector<CZerocoinMint>& vMintsSelected, bool fMintChange, bool fMinimizeChange, CBitcoinAddress* addressTo = NULL);
-    std::string ResetMintZerocoin(bool fExtendedSearch);
-    std::string ResetSpentZerocoin();
-    void ReconsiderZerocoins(std::list<CZerocoinMint>& listMintsRestored);
-    void XIONBackupWallet();
-
     /** Zerocin entry changed.
     * @note called with lock cs_wallet held.
     */
@@ -308,20 +276,6 @@ public:
         nAutoCombineThreshold = 0;
     }
 
-    int getZeromintPercentage()
-    {
-        return nZeromintPercentage;
-    }
-
-    bool isZeromintEnabled()
-    {
-        return fEnableZeromint;
-    }
-
-    void setXIONAutoBackups(bool fEnabled)
-    {
-        fBackupMints = fEnabled;
-    }
     
     bool isMultiSendEnabled()
     {
@@ -448,12 +402,8 @@ public:
     void ReacceptWalletTransactions();
     void ResendWalletTransactions();
     CAmount GetBalance() const;
-    CAmount GetZerocoinBalance(bool fMatureOnly) const;
-    CAmount GetUnconfirmedZerocoinBalance() const;
-    CAmount GetImmatureZerocoinBalance() const;
     CAmount GetLockedCoins() const;
     CAmount GetUnlockedCoins() const;
-    std::map<libzerocoin::CoinDenomination, CAmount> GetMyZerocoinDistribution() const;
     CAmount GetUnconfirmedBalance() const;
     CAmount GetImmatureBalance() const;
     CAmount GetAnonymizableBalance() const;
@@ -485,7 +435,6 @@ public:
     bool CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CMutableTransaction& txNew, unsigned int& nTxNewTime);
     bool MultiSend();
     void AutoCombineDust();
-    void AutoZeromint();
 
     static CFeeRate minTxFee;
     static CAmount GetMinimumFee(unsigned int nTxBytes, unsigned int nConfirmTarget, const CTxMemPool& pool);
@@ -523,7 +472,6 @@ public:
     {
         return ::IsMine(*this, txout.scriptPubKey);
     }
-    bool IsMyZerocoinSpend(const CBigNum& bnSerial) const;
     CAmount GetCredit(const CTxOut& txout, const isminefilter& filter) const
     {
         if (!MoneyRange(txout.nValue))
@@ -993,8 +941,6 @@ public:
         if (nDepth >= 1)
             return true;
         if (nDepth < 0)
-            return false;
-        if (!bSpendZeroConfChange || !IsFromMe(ISMINE_ALL)) // using wtx's cached debit
             return false;
 
         // Trusted if all inputs are from us and are in the mempool:
