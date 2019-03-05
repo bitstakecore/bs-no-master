@@ -20,14 +20,6 @@
 #include <cstdlib>
 #include <sys/time.h>
 #include "streams.h"
-#include "libzerocoin/ParamGeneration.h"
-#include "libzerocoin/Denominations.h"
-#include "libzerocoin/Coin.h"
-#include "libzerocoin/CoinSpend.h"
-#include "libzerocoin/Accumulator.h"
-
-using namespace std;
-using namespace libzerocoin;
 
 #define COLOR_STR_GREEN   "\033[32m"
 #define COLOR_STR_NORMAL  "\033[0m"
