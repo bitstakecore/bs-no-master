@@ -278,9 +278,6 @@ public:
         return IsZerocoinSpend() || IsZerocoinMint();
     }
 
-    CAmount GetZerocoinMinted() const;
-    CAmount GetZerocoinSpent() const;
-    int GetZerocoinMintCount() const;
 
     bool UsesUTXO(const COutPoint out);
     std::list<COutPoint> GetOutPoints() const;
