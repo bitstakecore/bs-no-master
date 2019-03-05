@@ -8,7 +8,6 @@
 
 #include <QDialog>
 #include <QTreeWidgetItem>
-#include "primitives/zerocoin.h"
 #include "privacydialog.h"
 
 class CZerocoinMint;

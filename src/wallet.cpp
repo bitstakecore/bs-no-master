@@ -25,7 +25,6 @@
 #include "util.h"
 #include "utilmoneystr.h"
 
-#include "denomination_functions.h"
 #include <assert.h>
 
 #include <boost/algorithm/string/replace.hpp>

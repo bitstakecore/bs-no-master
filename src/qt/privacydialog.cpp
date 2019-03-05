@@ -9,7 +9,6 @@
 #include "addresstablemodel.h"
 #include "bitcoinunits.h"
 #include "coincontroldialog.h"
-#include "libzerocoin/Denominations.h"
 #include "optionsmodel.h"
 #include "sendcoinsentry.h"
 #include "walletmodel.h"
