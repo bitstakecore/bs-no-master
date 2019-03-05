@@ -319,12 +319,6 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 {
     if (pindexLast->nHeight < Params().MidasStartHeight()){
         return GetNextWorkRequiredOrig(pindexLast, fProofOfStake);
-    } else if (pindexLast->nHeight >= Params().MidasStartHeight() && pindexLast->nHeight < Params().Zerocoin_StartHeight() -1){
-        return GetNextWorkRequiredMidas(pindexLast, fProofOfStake);
-    } else if (pindexLast->nHeight >= Params().Zerocoin_StartHeight() -1 && pindexLast->nHeight < Params().Zerocoin_StartHeight()) {
-        return GetNextWorkRequiredDGW(pindexLast, pblock);
-    } else if (pindexLast->nHeight >= Params().Zerocoin_StartHeight()) {
-        return GetNextWorkRequiredDGW(pindexLast, pblock);
     } else {
         return GetNextWorkRequiredDGW(pindexLast, pblock);
     }  
