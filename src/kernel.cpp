@@ -356,9 +356,6 @@ bool CheckStakeKernelHashPos2(unsigned int nBits, const CBlock blockFrom, const 
          *   return stakeTargetHit(hashProofOfStake, nValueIn, bnTargetPerCoinDay);
          * cevap: reenabling from zerocoinstartheight, (**TODO**: cleanup after we pass zerocoinstartheight)
          */
-        if (chainActive.Height() >= Params().Zerocoin_StartHeight()) {
-            return stakeTargetHit(hashProofOfStake, nValueIn, bnTargetPerCoinDay);
-        }
         return true;
     }
 
