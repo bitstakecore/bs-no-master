@@ -12,6 +12,7 @@
 #include "db.h"
 #include "key.h"
 #include "keystore.h"
+#include "bignum.h"
 
 #include <list>
 #include <stdint.h>
@@ -27,8 +28,6 @@ class CMasterKey;
 class CScript;
 class CWallet;
 class CWalletTx;
-class CZerocoinMint;
-class CZerocoinSpend;
 class uint160;
 class uint256;
 
@@ -149,19 +148,6 @@ public:
     static bool Recover(CDBEnv& dbenv, std::string filename, bool fOnlyKeys);
     static bool Recover(CDBEnv& dbenv, std::string filename);
 
-    bool WriteZerocoinMint(const CZerocoinMint& zerocoinMint);
-    bool EraseZerocoinMint(const CZerocoinMint& zerocoinMint);
-    bool ReadZerocoinMint(const CBigNum &bnSerial, CZerocoinMint& zerocoinMint);
-    bool ArchiveMintOrphan(const CZerocoinMint& zerocoinMint);
-    bool UnarchiveZerocoin(const CZerocoinMint& mint);
-    std::list<CZerocoinMint> ListMintedCoins(bool fUnusedOnly, bool fMaturedOnly, bool fUpdateStatus);
-    std::list<CZerocoinSpend> ListSpentCoins();
-    std::list<CBigNum> ListMintedCoinsSerial();
-    std::list<CBigNum> ListSpentCoinsSerial();
-    std::list<CZerocoinMint> ListArchivedZerocoins();
-    bool WriteZerocoinSpendSerialEntry(const CZerocoinSpend& zerocoinSpend);
-    bool EraseZerocoinSpendSerialEntry(const CBigNum& serialEntry);
-    bool ReadZerocoinSpendSerialEntry(const CBigNum& bnSerial);
 
 private:
     CWalletDB(const CWalletDB&);
