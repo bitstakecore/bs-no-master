@@ -115,7 +115,6 @@ public:
         DuplicateAddress,
         TransactionCreationFailed, // Error returned when wallet is still locked
         TransactionCommitFailed,
-        AnonymizeOnlyUnlocked,
         InsaneFee
     };
 
@@ -123,7 +122,6 @@ public:
         Unencrypted,                 // !wallet->IsCrypted()
         Locked,                      // wallet->IsCrypted() && wallet->IsLocked()
         Unlocked,                    // wallet->IsCrypted() && !wallet->IsLocked()
-        UnlockedForAnonymizationOnly // wallet->IsCrypted() && !wallet->IsLocked() && wallet->fWalletUnlockAnonymizeOnly
     };
 
     OptionsModel* getOptionsModel();
@@ -170,7 +168,6 @@ public:
     bool setWalletLocked(bool locked, const SecureString& passPhrase = SecureString(), bool anonymizeOnly = false);
     bool changePassphrase(const SecureString& oldPass, const SecureString& newPass);
     // Is wallet unlocked for anonymization only?
-    bool isAnonymizeOnlyUnlocked();
     // Wallet backup
     bool backupWallet(const QString& filename);
 

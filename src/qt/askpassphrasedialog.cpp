@@ -51,8 +51,6 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->passEdit1->hide();
         setWindowTitle(tr("Encrypt wallet"));
         break;
-    case Mode::UnlockAnonymize:
-        ui->anonymizationCheckBox->show();
     case Mode::Unlock: // Ask passphrase
         ui->warningLabel->setText(tr("This operation needs your wallet passphrase to unlock the wallet."));
         ui->passLabel2->hide();
@@ -155,7 +153,6 @@ void AskPassphraseDialog::accept()
             QDialog::reject(); // Cancelled
         }
     } break;
-    case Mode::UnlockAnonymize:
     case Mode::Unlock:
         if (!model->setWalletLocked(false, oldpass, ui->anonymizationCheckBox->isChecked())) {
             QMessageBox::critical(this, tr("Wallet unlock failed"),
@@ -198,7 +195,6 @@ void AskPassphraseDialog::textChanged()
     case Mode::Encrypt: // New passphrase x2
         acceptable = !ui->passEdit2->text().isEmpty() && !ui->passEdit3->text().isEmpty();
         break;
-    case Mode::UnlockAnonymize: // Old passphrase x1
     case Mode::Unlock:          // Old passphrase x1
     case Mode::Decrypt:
         acceptable = !ui->passEdit1->text().isEmpty();
