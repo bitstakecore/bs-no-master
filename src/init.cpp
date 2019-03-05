@@ -12,7 +12,6 @@
 
 #include "init.h"
 
-#include "accumulators.h"
 #include "activemasternode.h"
 #include "addrman.h"
 #include "amount.h"
@@ -43,7 +42,6 @@
 #include "db.h"
 #include "wallet.h"
 #include "walletdb.h"
-#include "accumulators.h"
 
 #endif
 
@@ -234,8 +232,6 @@ void PrepareShutdown()
         pcoinsdbview = NULL;
         delete pblocktree;
         pblocktree = NULL;
-        delete zerocoinDB;
-        zerocoinDB = NULL;
         delete pSporkDB;
         pSporkDB = NULL;
     }
@@ -967,7 +963,6 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         }
     }
     nTxConfirmTarget = GetArg("-txconfirmtarget", 1);
-    bSpendZeroConfChange = GetBoolArg("-spendzeroconfchange", false);
     bdisableSystemnotifications = GetBoolArg("-disablesystemnotifications", false);
     fSendFreeTransactions = GetBoolArg("-sendfreetransactions", false);
 
@@ -1385,11 +1380,9 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
                 delete pcoinsdbview;
                 delete pcoinscatcher;
                 delete pblocktree;
-                delete zerocoinDB;
                 delete pSporkDB;
 
                 //BS specific: zerocoin and spork DB's
-                zerocoinDB = new CZerocoinDB(0, false, fReindex);
                 pSporkDB = new CSporkDB(0, false, false);
 
                 pblocktree = new CBlockTreeDB(nBlockTreeDBCache, false, fReindex);
@@ -1433,23 +1426,8 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
                 PopulateInvalidOutPointMap();
 
                 // Recalculate money supply for blocks that are impacted by accounting issue after zerocoin activation
-                if (GetBoolArg("-reindexmoneysupply", false)) {
-                    if (chainActive.Height() > Params().Zerocoin_StartHeight()) {
-                        RecalculateXIONMinted();
-                        RecalculateXIONSpent();
-                    }
-                    RecalculateBSSupply(1);
-                }
 
                 // Force recalculation of accumulators.
-                if (GetBoolArg("-reindexaccumulators", false)) {
-                    CBlockIndex* pindex = chainActive[Params().Zerocoin_StartHeight()];
-                    while (pindex->nHeight < chainActive.Height()) {
-                        if (!count(listAccCheckpointsNoDB.begin(), listAccCheckpointsNoDB.end(), pindex->nAccumulatorCheckpoint))
-                            listAccCheckpointsNoDB.emplace_back(pindex->nAccumulatorCheckpoint);
-                        pindex = chainActive.Next(pindex);
-                    }
-                }
 
                 // BS: recalculate Accumulator Checkpoints that failed to database properly
                 if (!listAccCheckpointsNoDB.empty()) {
@@ -1457,8 +1435,6 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
                     LogPrintf("%s : finding missing checkpoints\n", __func__);
 
                     string strError;
-                    if (!ReindexAccumulators(listAccCheckpointsNoDB, strError))
-                        return InitError(strError);
                 }
 
                 uiInterface.InitMessage(_("Verifying blocks..."));
@@ -1640,8 +1616,6 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         }
         fVerifyingBlocks = false;
 
-        bool fEnableXIONBackups = GetBoolArg("-backupxion", true);
-        pwalletMain->setXIONAutoBackups(fEnableXIONBackups);
     }  // (!fDisableWallet)
 #else  // ENABLE_WALLET
     LogPrintf("No wallet compiled in!\n");

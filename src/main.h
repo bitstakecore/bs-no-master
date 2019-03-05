@@ -14,6 +14,7 @@
 #include "config/BS-config.h"
 #endif
 
+#include "bignum.h"
 #include "amount.h"
 #include "chain.h"
 #include "chainparams.h"
@@ -22,7 +23,6 @@
 #include "pow.h"
 #include "primitives/block.h"
 #include "primitives/transaction.h"
-#include "primitives/zerocoin.h"
 #include "script/script.h"
 #include "script/sigcache.h"
 #include "script/standard.h"
@@ -41,13 +41,11 @@
 #include <utility>
 #include <vector>
 
-#include "libzerocoin/CoinSpend.h"
 
 #include <boost/unordered_map.hpp>
 
 class CBlockIndex;
 class CBlockTreeDB;
-class CZerocoinDB;
 class CSporkDB;
 class CBloomFilter;
 class CInv;
@@ -162,7 +160,6 @@ extern std::map<unsigned int, unsigned int> mapHashedBlocks;
 extern std::map<COutPoint, COutPoint> mapInvalidOutPoints;
 extern std::map<CBigNum, CAmount> mapInvalidSerials;
 extern std::set<std::pair<COutPoint, unsigned int> > setStakeSeen;
-extern std::map<uint256, int64_t> mapZerocoinspends; //txid, time received
 
 /** Best header we've seen so far (used for getheaders queries' starting points). */
 extern CBlockIndex* pindexBestHeader;
@@ -355,30 +352,12 @@ bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsVi
 void UpdateCoins(const CTransaction& tx, CValidationState& state, CCoinsViewCache& inputs, CTxUndo& txundo, int nHeight);
 
 /** Context-independent validity checks */
-bool CheckTransaction(const CTransaction& tx, bool fZerocoinActive, bool fRejectBadUTXO, CValidationState& state);
-bool CheckZerocoinMint(const uint256& txHash, const CTxOut& txout, CValidationState& state, bool fCheckOnly = false);
-bool CheckZerocoinSpend(const CTransaction tx, bool fVerifySignature, CValidationState& state);
-bool ContextualCheckCoinSpend(const libzerocoin::CoinSpend& spend, CBlockIndex* pindex, const uint256& txid);
-libzerocoin::CoinSpend TxInToZerocoinSpend(const CTxIn& txin);
-bool TxOutToPublicCoin(const CTxOut txout, libzerocoin::PublicCoin& pubCoin, CValidationState& state);
-bool BlockToPubcoinList(const CBlock& block, list<libzerocoin::PublicCoin>& listPubcoins, bool fFilterInvalid);
-bool BlockToZerocoinMintList(const CBlock& block, std::list<CZerocoinMint>& vMints, bool fFilterInvalid);
-bool BlockToMintValueVector(const CBlock& block, const libzerocoin::CoinDenomination denom, std::vector<CBigNum>& vValues);
-std::list<libzerocoin::CoinDenomination> ZerocoinSpendListFromBlock(const CBlock& block, bool fFilterInvalid);
-void FindMints(vector<CZerocoinMint> vMintsToFind, vector<CZerocoinMint>& vMintsToUpdate, vector<CZerocoinMint>& vMissingMints, bool fExtendedSearch);
-bool GetZerocoinMint(const CBigNum& bnPubcoin, uint256& txHash);
-bool IsSerialKnown(const CBigNum& bnSerial);
-bool IsSerialInBlockchain(const CBigNum& bnSerial, int& nHeightTx);
+bool CheckTransaction(const CTransaction& tx, bool fRejectBadUTXO, CValidationState& state);
 bool RemoveSerialFromDB(const CBigNum& bnSerial);
-int GetZerocoinStartHeight();
 bool IsTransactionInChain(uint256 txId, int& nHeightTx);
 bool IsBlockHashInChain(const uint256& hashBlock);
 void PopulateInvalidOutPointMap();
 bool ValidOutPoint(const COutPoint out, int nHeight);
-void RecalculateXIONSpent();
-void RecalculateXIONMinted();
-bool RecalculateBSSupply(int nHeightStart);
-bool ReindexAccumulators(list<uint256>& listMissingCheckpoints, string& strError);
 
 
 /**
@@ -647,7 +626,6 @@ extern CCoinsViewCache* pcoinsTip;
 extern CBlockTreeDB* pblocktree;
 
 /** Global variable that points to the zerocoin database (protected by cs_main) */
-extern CZerocoinDB* zerocoinDB;
 
 /** Global variable that points to the spork database (protected by cs_main) */
 extern CSporkDB* pSporkDB;
