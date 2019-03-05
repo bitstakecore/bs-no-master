@@ -11,7 +11,6 @@
 
 #include "denomination_functions.h"
 
-using namespace libzerocoin;
 
 // -------------------------------------------------------------------------------------------------------
 // Number of coins used for either change or a spend given a map of coins used
