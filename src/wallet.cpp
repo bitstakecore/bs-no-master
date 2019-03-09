@@ -1417,8 +1417,6 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
                 if (!found) continue;
 
                 if (nCoinType == STAKABLE_COINS) {
-                    if (pcoin->vout[i].IsZerocoinMint())
-                        continue;
                 }
 
                 isminetype mine = IsMine(pcoin->vout[i]);
@@ -1580,11 +1578,6 @@ bool CWallet::MintableCoins()
         LOCK(cs_main);
         for (const COutput& out : vCoins) {
             int64_t nTxTime = out.tx->GetTxTime();
-            if (out.tx->IsZerocoinSpend()) {
-                if (!out.tx->IsInMainChain())
-                    continue;
-                nTxTime = mapBlockIndex.at(out.tx->hashBlock)->GetBlockTime();
-            }
 
             if (GetAdjustedTime() - nTxTime > nStakeMinAge)
                 return true;
@@ -1718,7 +1711,6 @@ bool CWallet::SelectCoins(const CAmount& nTargetValue, set<pair<const CWalletTx*
                 CTxIn vin = CTxIn(out.tx->GetHash(), out.i);
                 int rounds = GetInputObfuscationRounds(vin);
                 // make sure it's actually anonymized
-                if (rounds < nZeromintPercentage) continue;
             }
 
             nValueRet += out.tx->vout[out.i].nValue;
@@ -1738,7 +1730,6 @@ bool CWallet::SelectCoins(const CAmount& nTargetValue, set<pair<const CWalletTx*
                     CTxIn vin = CTxIn(out.tx->GetHash(), out.i);
                     int rounds = GetInputObfuscationRounds(vin);
                     // make sure it's actually anonymized
-                    if (rounds < nZeromintPercentage) continue;
                     nValueRet += out.tx->vout[out.i].nValue;
                     setCoinsRet.insert(make_pair(out.tx, out.i));
                 }
@@ -2519,7 +2510,6 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, std:
             AddToWallet(wtxNew);
 
             // Notify that old coins are spent
-            if (!wtxNew.IsZerocoinSpend()) {
                 set<uint256> updated_hahes;
                 BOOST_FOREACH (const CTxIn& txin, wtxNew.vin) {
                     // notify only once
@@ -2530,7 +2520,6 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, std:
                     NotifyTransactionChanged(this, txin.prevout.hash, CT_UPDATED);
                     updated_hahes.insert(txin.prevout.hash);
                 }
-            }
 
             if (fFileBacked)
                 delete pwalletdb;
@@ -3772,14 +3761,12 @@ void CWalletTx::GetAmounts(list<COutputEntry>& listReceived,
             // Don't report 'change' txouts
             if (pwallet->IsChange(txout))
                 continue;
-        } else if (!(fIsMine & filter) && !IsZerocoinSpend())
+        } else if (!(fIsMine & filter)) 
             continue;
 
         // In either case, we need to get the destination address
         CTxDestination address;
-        if (txout.scriptPubKey.IsZerocoinMint()) {
-            address = CNoDestination();
-        } else if (!ExtractDestination(txout.scriptPubKey, address)) {
+        if (!ExtractDestination(txout.scriptPubKey, address)) {
             if (!IsCoinStake() && !IsCoinBase()) {
                 LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n", this->GetHash().ToString());
             }

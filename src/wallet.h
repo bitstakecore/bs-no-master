@@ -183,7 +183,6 @@ public:
     /** Zerocin entry changed.
     * @note called with lock cs_wallet held.
     */
-    boost::signals2::signal<void(CWallet* wallet, const std::string& pubCoin, const std::string& isUsed, ChangeType status)> NotifyZerocoinChanged;
     /*
      * Main wallet lock.
      * This lock protects all the fields added by CWallet

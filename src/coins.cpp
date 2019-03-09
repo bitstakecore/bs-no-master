@@ -235,7 +235,7 @@ CAmount CCoinsViewCache::GetValueIn(const CTransaction& tx) const
 
 bool CCoinsViewCache::HaveInputs(const CTransaction& tx) const
 {
-    if (!tx.IsCoinBase() && !tx.IsZerocoinSpend()) {
+    if (!tx.IsCoinBase() ) {
         for (unsigned int i = 0; i < tx.vin.size(); i++) {
             const COutPoint& prevout = tx.vin[i].prevout;
             const CCoins* coins = AccessCoins(prevout.hash);
