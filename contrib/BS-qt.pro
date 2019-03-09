@@ -642,19 +642,5 @@ SOURCES += src/activemasternode.cpp \
            src/secp256k1/src/java/org_bitcoin_NativeSecp256k1.c
 RESOURCES += src/qt/BS.qrc src/qt/BS_locale.qrc
 
-TRANSLATIONS += src/qt/locale/BS_bg.ts \
-                src/qt/locale/BS_de.ts \
-                src/qt/locale/BS_en.ts \
-                src/qt/locale/BS_es.ts \
-                src/qt/locale/BS_fi.ts \
-                src/qt/locale/BS_fr.ts \
-                src/qt/locale/BS_it.ts \
-                src/qt/locale/BS_ja.ts \
-                src/qt/locale/BS_pl.ts \
-                src/qt/locale/BS_pt.ts \
-                src/qt/locale/BS_ru.ts \
-                src/qt/locale/BS_sk.ts \
-                src/qt/locale/BS_sv.ts \
-                src/qt/locale/BS_vi.ts \
+TRANSLATIONS += src/qt/locale/BS_en.ts \
                 src/qt/locale/BS_zh_CN.ts \
-                src/qt/locale/BS_zh_TW.ts

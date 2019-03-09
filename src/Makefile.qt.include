@@ -9,31 +9,9 @@ EXTRA_LIBRARIES += qt/libbitcoinqt.a
 
 # BS qt core #
 QT_TS = \
-  qt/locale/BS_bg.ts \
-  qt/locale/BS_ca.ts \
-  qt/locale/BS_cs.ts \
-  qt/locale/BS_da.ts \
-  qt/locale/BS_de.ts \
   qt/locale/BS_en.ts \
   qt/locale/BS_en_US.ts \
-  qt/locale/BS_es.ts \
-  qt/locale/BS_fi.ts \
-  qt/locale/BS_fr_FR.ts \
-  qt/locale/BS_it.ts \
-  qt/locale/BS_ja.ts \
-  qt/locale/BS_ko_KR.ts \
-  qt/locale/BS_nl.ts \
-  qt/locale/BS_pl.ts \
-  qt/locale/BS_pt.ts \
-  qt/locale/BS_pt_BR.ts \
-  qt/locale/BS_ro_RO.ts \
-  qt/locale/BS_ru.ts \
-  qt/locale/BS_sk.ts \
-  qt/locale/BS_sv.ts \
-  qt/locale/BS_tr.ts \
-  qt/locale/BS_uk.ts \
-  qt/locale/BS_zh_CN.ts \
-  qt/locale/BS_zh_TW.ts
+  qt/locale/BS_zh_CN.ts 
 
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
