@@ -1190,15 +1190,6 @@ void BitcoinGUI::setStakingStatus()
 
 void BitcoinGUI::setAutoMintStatus()
 {
-    if (fEnableZeromint) {
-        labelAutoMintIcon->hide();//show();
-        labelAutoMintIcon->setIcon(QIcon(":/icons/automint_active").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
-        labelAutoMintIcon->setToolTip(tr("AutoMint is currently enabled and set to ") + QString::number(nZeromintPercentage) + "%.\n");
-    } else {
-        labelAutoMintIcon->hide();//show();
-        labelAutoMintIcon->setIcon(QIcon(":/icons/automint_inactive").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
-        labelAutoMintIcon->setToolTip(tr("AutoMint is disabled"));
-    }
 }
 
 bool BitcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
