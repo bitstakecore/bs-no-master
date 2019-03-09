@@ -82,6 +82,4 @@ void ObfuscationConfig::configure(bool enabled, int coins, int rounds)
     settings.setValue("nObfuscationRounds", rounds);
     settings.setValue("nAnonymizeBSAmount", coins);
 
-    nZeromintPercentage = rounds;
-    nAnonymizeBSAmount = coins;
 }
